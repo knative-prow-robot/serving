@@ -44,7 +44,7 @@ spec:
           serviceAccountName: scale-from-zero
           containers:
             - name: scale-from-zero
-              image: knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
+              image: ko://knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
               args:
                 - "-parallel=1"
               env:
@@ -60,7 +60,7 @@ spec:
                 - name: mako-secrets
                   mountPath: /var/secret
             - name: mako
-              image: gcr.io/knative-performance/mako-microservice:latest
+              image: gcr.io/knative-tests/test-infra/mako-microservice:latest
               env:
                 - name: GOOGLE_APPLICATION_CREDENTIALS
                   value: /var/secret/robot.json
@@ -91,7 +91,7 @@ spec:
           serviceAccountName: scale-from-zero
           containers:
             - name: scale-from-zero
-              image: knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
+              image: ko://knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
               args:
                 - "-parallel=5"
               env:
@@ -107,7 +107,7 @@ spec:
                 - name: mako-secrets
                   mountPath: /var/secret
             - name: mako
-              image: gcr.io/knative-performance/mako-microservice:latest
+              image: gcr.io/knative-tests/test-infra/mako-microservice:latest
               env:
                 - name: GOOGLE_APPLICATION_CREDENTIALS
                   value: /var/secret/robot.json
@@ -138,7 +138,7 @@ spec:
           serviceAccountName: scale-from-zero
           containers:
             - name: scale-from-zero
-              image: knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
+              image: ko://knative.dev/serving/test/performance/benchmarks/scale-from-zero/continuous
               args:
                 - "-parallel=25"
               env:
@@ -154,7 +154,7 @@ spec:
                 - name: mako-secrets
                   mountPath: /var/secret
             - name: mako
-              image: gcr.io/knative-performance/mako-microservice:latest
+              image: gcr.io/knative-tests/test-infra/mako-microservice:latest
               env:
                 - name: GOOGLE_APPLICATION_CREDENTIALS
                   value: /var/secret/robot.json

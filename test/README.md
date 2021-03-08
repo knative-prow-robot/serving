@@ -111,8 +111,6 @@ These tests require:
   [your environment variables](../DEVELOPMENT.md#setup-your-environment).
 - Since these tests are fairly slow, running them with logging enabled is
   recommended (`-v`).
-- Using [`--logverbose`](#output-verbose-log) to see the verbose log output from
-  test as well as from k8s libraries.
 - Using `-count=1` is
   [the idiomatic way to disable test caching](https://golang.org/doc/go1.10#test)
 
@@ -146,6 +144,10 @@ To run the script for all end to end test images:
 A docker tag may be passed as an optional parameter. This can be useful on
 Minikube in tandem with the `--tag` [flag](#using-a-docker-tag):
 
+`PLATFORM` environment variable is optional. If it is specified, test images
+will be built for specific hardware architecture, according to its value (for
+instance,`linux/arm64`).
+
 ```bash
 eval $(minikube docker-env)
 ./test/upload-test-images.sh any-old-tag
@@ -160,17 +162,19 @@ New test images should be placed in `./test/test_images`.
 These flags are useful for running against an existing cluster, making use of
 your existing [environment setup](../DEVELOPMENT.md#setup-your-environment).
 
-Tests importing [`github.com/knative/serving/test`](#test-library) recognize
-these flags:
+Tests importing [`knative.dev/serving/test`](#test-library) recognize these
+flags:
 
 - [All flags added by `knative/pkg/test`](https://github.com/knative/pkg/tree/master/test#flags)
-- [`--dockerrepo`](#overriding-docker-repo)
-- [`--tag`](#using-a-docker-tag)
-- [`--ingressendpoint`](#using-a-custom-ingress-endpoint)
+  such as:
+  - [`--dockerrepo`](#overriding-docker-repo)
+  - [`--tag`](#using-a-docker-tag)
+  - [`--ingressendpoint`](#using-a-custom-ingress-endpoint)
 - [`--resolvabledomain`](#using-a-resolvable-domain)
 - [`--https`](#using-https)
+- [`--ingressClass`](#using-ingress-class)
 
-### Overridding docker repo
+### Overriding docker repo
 
 The `--dockerrepo` argument lets you specify the docker repo from which images
 used by your tests should be pulled. This will default to the value of your
@@ -227,6 +231,23 @@ If you have configured your cluster to use a resolvable domain, you can use the
 `--resolvabledomain` flag to indicate that the test should make requests
 directly against `Route.Status.Domain` and does not need to spoof the `Host`.
 
+### Overriding the gateway used for spoofing
+
+If you are using an ingress provider other than Istio, and have not set up a
+resolvable domain (above), you will also need to set the `GATEWAY_OVERRIDE` and
+`GATEWAY_NAMESPACE_OVERRIDE` environment variables to allow the gateway to be
+discovered for spoofing. For example, for kourier you would do:
+
+```
+export GATEWAY_OVERRIDE=kourier
+export GATEWAY_NAMESPACE_OVERRIDE=kourier-system
+```
+
 ### Using https
 
 You can use the `--https` flag to have all tests run with https.
+
+### Using ingress class
+
+The `--ingressClass` argument lets you specify the ingress class. The default
+value is `istio.ingress.networking.knative.dev`.
